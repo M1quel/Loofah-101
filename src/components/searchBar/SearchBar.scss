@@ -1,0 +1,37 @@
+.searchBar {
+    height: 4em;
+    background-color: rgb(36, 36, 36);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 0 0 3px 2px rgb(114, 114, 114);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+    &Form {
+        padding: 10px 20px;
+        background-color: rgb(78, 78, 78);
+        border-radius: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &__input {
+            background-color: transparent;
+            color: whitesmoke;
+            &::placeholder {
+                color: rgb(148, 148, 148);
+            }
+            &:focus {
+                outline: none;
+            }
+        }
+        &__submit {
+            background-color: transparent;
+            color: rgb(204, 204, 204);
+        }
+
+    }
+}
