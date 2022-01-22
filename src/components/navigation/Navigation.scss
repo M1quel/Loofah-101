@@ -1,0 +1,30 @@
+.primaryNavigation {
+    position: fixed;
+    bottom: 10px;
+    left: 25px;
+    right: 25px;
+    height: clamp(50px, 8vh, 100px);
+    display: flex;
+    align-items: center;
+    background-color: rgb(53, 53, 53);
+    border-radius: 25px;
+    box-shadow: 0 0 3px 2px rgb(104, 104, 104);
+
+    &List {
+        display: flex;
+        justify-content: space-evenly;
+        list-style: none;
+        color: whitesmoke;
+        width: 100%;
+        &__item{
+            .link {
+                color: black;
+                font-family: sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+        }
+    }
+}
