@@ -14,6 +14,7 @@ export default function Workoutcard(props) {
                 setImageSrc(url);
             })
         }
+        // eslint-disable-next-line
     }, [props.imgSrc])
 
     return (
