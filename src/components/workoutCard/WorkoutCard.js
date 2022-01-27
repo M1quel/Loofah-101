@@ -8,7 +8,7 @@ export default function Workoutcard(props) {
     const storage = getStorage();
 
     useEffect(function () {
-        if (props.imgSrc && props.imgSrc != "") {
+        if (props.imgSrc && props.imgSrc !== "") {
             getDownloadURL(ref(storage, props.imgSrc))
             .then((url) => {
                 setImageSrc(url);

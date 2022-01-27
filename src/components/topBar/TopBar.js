@@ -1,5 +1,5 @@
 import { Link } from '@reach/router';
-import React, { useState } from 'react';
+import React from 'react';
 import "./TopBar.scss";
 
 export default function Topbar(props) {

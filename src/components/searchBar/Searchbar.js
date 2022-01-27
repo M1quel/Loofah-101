@@ -1,7 +1,7 @@
 import React from 'react';
 import "./SearchBar.scss";
 import { getAuth, signOut } from "firebase/auth";
-import { navigate } from '@reach/router';
+
 
 export default function Searchbar(props) {
     const auth = getAuth();
