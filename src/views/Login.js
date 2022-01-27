@@ -1,11 +1,24 @@
 import React from 'react'
-// import { signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { navigate } from '@reach/router';
 
 export default function Login(props) {
+    const auth = getAuth();
     
     function loginToFirebase(e) {
-    //     
+        e.preventDefault();
+        var email = e.target.email.value;
+        var password = e.target.password.value;
+        signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log(user);
+            navigate("/");
+        })
+        .catch((error) => {
+            // Give error message
+        });
     }
 
     return (

@@ -17,10 +17,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        width: 80%;
 
         &__input {
             background-color: transparent;
             color: whitesmoke;
+            width: 100%;
             &::placeholder {
                 color: rgb(148, 148, 148);
             }

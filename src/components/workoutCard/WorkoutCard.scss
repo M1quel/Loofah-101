@@ -1,0 +1,20 @@
+.workoutCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 10px;
+    background-color: rgb(46, 46, 46);
+    width: 100%;
+
+    &__image {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    &__title {
+        color: whitesmoke;
+        font-family: sans-serif;
+    }
+}

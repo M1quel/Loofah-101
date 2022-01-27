@@ -1,8 +1,17 @@
 import React from 'react';
 import "./SearchBar.scss";
+import { getAuth, signOut } from "firebase/auth";
+import { navigate } from '@reach/router';
 
 export default function Searchbar(props) {
-    
+    const auth = getAuth();
+    function signUserOut () {
+        signOut(auth).then(() => {
+            // Sign-out successful.
+        }).catch((error) => {
+            // An error happened.
+        });
+    }
 
     return (
         <>
@@ -12,6 +21,7 @@ export default function Searchbar(props) {
                     <button className='searchBarForm__submit' type="submit"><i className="fas fa-search"></i></button>
                 </form>
             </section>
+            <button onClick={() => signUserOut()}>Logout</button>
         </>
     )
 }
