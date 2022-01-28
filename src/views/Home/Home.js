@@ -17,10 +17,9 @@ export default function Home(props) {
         <>
             <motion.div 
                 className="home"
-                initial={{ scale: 0.8 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.8, position: 'absolute' }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0, position: 'absolute' }}
+                animate={{ opacity: 1, position: 'static' }}
+                exit={{ opacity: 0, position: 'absolute' }}
             >
                 <Searchbar/>
                 <section className='homeContent'>

@@ -21,9 +21,9 @@ export default function Workoutdetails(props) {
         <>
             <motion.div 
                 className="workoutDetails"
-                initial={{ x: "100vw", opacity: 0, position: 'absolute', zIndex: 999 }}
-                animate={{ x: "0px", opacity: 1, position: "static"}}
-                exit={{ x: "100vw", opacity: 0, position: 'absolute', zIndex: 999 }}
+                initial={{ x: "100vw", position: 'absolute', zIndex: 999 }}
+                animate={{ x: "0px", position: "static"}}
+                exit={{ x: "100vw", position: 'absolute', zIndex: 999 }}
                 transition={{ duration: 0.2, delay: 0.1 }}
             >
                 <header>
