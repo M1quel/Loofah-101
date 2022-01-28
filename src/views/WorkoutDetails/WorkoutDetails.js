@@ -48,14 +48,14 @@ export default function Workoutdetails(props) {
                     />
                 </header>
                 <main className='workoutDetailsMain'>
-                    <motion.img 
+                    {imageSrc && <motion.img 
                     className='workoutDetails__img' 
                     src={imageSrc} 
                     alt="" 
                     initial={{ height: 0 }}
                     animate={{ height: "40vh" }}
-                    transition={{delay: 0.2, duration: 0.3, easings: "anticipate",}}
-                    />
+                    transition={{duration: 0.3, easings: "anticipate",}}
+                    />}
 
                 </main>
             </motion.div>
