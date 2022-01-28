@@ -4,4 +4,11 @@
     width: 100vw;
     z-index: 999;
     position: absolute;
+    background-color: rgb(59, 59, 59);
+    box-shadow: 0 0 10px 2px black;
+
+    &__img {
+        width: 100%;
+        object-fit: cover;
+    }
 }
