@@ -1,9 +1,11 @@
 import React from 'react'
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { navigate } from '@reach/router';
+import { useHistory } from 'react-router-dom';
 
 export default function Login(props) {
     const auth = getAuth();
+    const history = useHistory();
     
     function loginToFirebase(e) {
         e.preventDefault();
@@ -14,7 +16,7 @@ export default function Login(props) {
             // Signed in
             const user = userCredential.user;
             console.log(user);
-            navigate("/");
+            history.push("/");
         })
         .catch((error) => {
             // Give error message

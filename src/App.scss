@@ -13,5 +13,7 @@
   .view {
     height: 100vh;
     background-color: rgb(59, 59, 59);
+    width: 100vw;
+    overflow-y: hidden;
   }
 }

@@ -1,28 +1,38 @@
+import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import Topbar from '../../components/topBar/TopBar';
 import getDocFromCollection from '../../helpers/getDocFromCollection';
+import { motion } from 'framer-motion';
+import "./WorkoutDetails.scss";
 
 export default function Workoutdetails(props) {
+    let { id } = useParams();
     var [workout, setWorkout] = useState({});
     
     useEffect(function () {
-        getDocFromCollection("workouts", props.id)
+        getDocFromCollection("workouts", id)
         .then(doc => {
             setWorkout(doc);
             console.log(doc);
         })
-    }, [props.id])
+    }, [id])
 
     return (
         <>
-            <div className="workoutDetails">
+            <motion.div 
+                className="workoutDetails"
+                initial={{ x: "100vw", opacity: 0, position: 'absolute', zIndex: 999 }}
+                animate={{ x: "0px", opacity: 1, position: "static"}}
+                exit={{ x: "100vw", opacity: 0, position: 'absolute', zIndex: 999 }}
+                transition={{ duration: 0.2, delay: 0.1 }}
+            >
                 <header>
                     <Topbar
                     pageTitle={workout.name}
                     back={"/"}
                     />
                 </header>
-            </div>
+            </motion.div>
         </>
     )
 }

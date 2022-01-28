@@ -1,4 +1,4 @@
-import { Link } from '@reach/router';
+import { Link } from 'react-router-dom';
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import React, { useEffect, useState } from 'react';
 import "./WorkoutCard.scss";
@@ -19,7 +19,7 @@ export default function Workoutcard(props) {
 
     return (
         <>
-            <Link to={`/workout/${props.data_id}`} className='workoutCard'>
+            <Link to={`workout/${props.data_id}`} className='workoutCard'>
                 <img className='workoutCard__image' src={imageSrc} alt="" />
                 <h2 className='workoutCard__title'>{props.title}</h2>
             </Link>
