@@ -21,7 +21,7 @@ function App() {
   return (
     <div className="wrapper">
       <div className="view">
-        <AnimatePresence  initial={false}>
+        <AnimatePresence initial={false}>
           <Switch location={location} key={location.pathname}>
             <Route exact path="/" children={<Home/>} />
             <Route path="/login" children={<Login />}/>

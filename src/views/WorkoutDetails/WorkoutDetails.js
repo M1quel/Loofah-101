@@ -21,10 +21,11 @@ export default function Workoutdetails(props) {
         <>
             <motion.div 
                 className="workoutDetails"
-                initial={{ x: "100vw", position: 'absolute', zIndex: 999 }}
-                animate={{ x: "0px", position: "static"}}
-                exit={{ x: "100vw", position: 'absolute', zIndex: 999 }}
-                transition={{ duration: 0.2, delay: 0.1 }}
+                initial={{ x: "100vw" }}
+                animate={{ x: "0px" }}
+                exit={{ x: "100vw" }}
+                transition={{ duration: 0.3, easings: "easeInOut"  }}
+                layout="position"
             >
                 <header>
                     <Topbar

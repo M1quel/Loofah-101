@@ -1,6 +1,7 @@
 .home {
     width: 100vw;
-
+    position: absolute;
+    top: 0;
     &Content {
         display: grid;
         grid-template-columns: 1fr 1fr;
