@@ -7,7 +7,7 @@
     display: flex;
     align-items: flex-end;
 
-    .overlat__content {
+    &__content {
         background-color: rgb(49, 49, 49);
         height: 40vh;
         border-top-left-radius: 15px;
@@ -17,5 +17,29 @@
         align-items: center;
         padding: 25px 20px 0 20px;
         width: 100%;
+        position: relative;
+
+        &--view {
+            position: absolute;
+        }
+        &--edit {
+            position: absolute;
+        }
+
+        .modeButtonsWrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: auto;
+            margin-bottom: 30px;
+            .modeButtons {
+                width: 80%;
+                padding: 15px 0;
+                border-radius: 10px;
+    
+            }
+        }
     }
 }
