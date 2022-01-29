@@ -2,20 +2,24 @@ import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import Topbar from '../../components/topBar/TopBar';
 import getDocFromCollection from '../../helpers/getDocFromCollection';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import "./WorkoutDetails.scss";
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import { where } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import getEverything from "../../helpers/getEverythingFromColection";
 import Contentgroup from '../../components/contentGroup/ContentGroup';
+import Userrecordcard from '../../components/userRecordCard/UserRecordCard';
+import Modal from "../../components/modal/Modal";
 
 export default function Workoutdetails(props) {
     var auth = getAuth();
     let { id } = useParams();
     var [imageSrc, setImageSrc] = useState();
     var [workout, setWorkout] = useState({});
-    var [userRecords, setUserRecords] = useState([])
+    var [userRecords, setUserRecords] = useState([]);
+    var [recordModal, setRecordModal] = useState(false);
+    console.log(recordModal);
     const storage = getStorage();
     
     // Get the current workout
@@ -92,14 +96,35 @@ export default function Workoutdetails(props) {
 
                         {userRecords.length > 0 && <Contentgroup delay={0.5}>
                             <h1 className='contentGroup__title'>Dine rekorder</h1>
-                            <div className="itemWrappper">
-                                {userRecords.map(doc => {
+                            <div className="itemWrapper userRecords">
+                                {userRecords.map((doc, index) => {
                                     var docData = doc.data();
-                                    console.log(docData)
-                                    return <p>You did {docData.repetitions} repetitions with {docData.weight} kg.</p>
+                                    return <Userrecordcard 
+                                        delay={index + 1} 
+                                        parentDelay={0.6} 
+                                        onClick={() => setRecordModal({
+                                            title: "Record details",
+                                            recordId: doc.id,
+                                            recordDetails: {
+                                                repetitions: docData.repetitions,
+                                                weight: docData.weight
+                                            },
+                                            userId: auth?.currentUser?.uid
+                                        })}
+                                        repetitions={docData.repetitions}
+                                        weight={docData.weight}
+                                    />
                                 })}
                             </div>
                         </Contentgroup>}
+                        
+                        <AnimatePresence>
+                        {recordModal && <Modal setRecordModal={setRecordModal}>
+                            <h1>{recordModal.title}</h1>
+                            <p>repetitions: {recordModal.recordDetails?.repetitions}, weight: {recordModal.recordDetails?.weight}</p>
+                        
+                        </Modal>}
+                        </AnimatePresence>
                         
                     </div>
 
