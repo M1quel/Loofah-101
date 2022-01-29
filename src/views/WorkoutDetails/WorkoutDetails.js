@@ -5,22 +5,29 @@ import getDocFromCollection from '../../helpers/getDocFromCollection';
 import { motion } from 'framer-motion';
 import "./WorkoutDetails.scss";
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
+import { where } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
+import getEverything from "../../helpers/getEverythingFromColection";
+import Contentgroup from '../../components/contentGroup/ContentGroup';
 
 export default function Workoutdetails(props) {
+    var auth = getAuth();
     let { id } = useParams();
     var [imageSrc, setImageSrc] = useState();
     var [workout, setWorkout] = useState({});
+    var [userRecords, setUserRecords] = useState([])
     const storage = getStorage();
     
+    // Get the current workout
     useEffect(function () {
         getDocFromCollection("workouts", id)
         .then(doc => {
             setWorkout(doc);
-            console.log(doc);
         })
         
     }, [id])
 
+    // get the image of the current workout
     useEffect(function () {
         if (!workout.image) return;
         getDownloadURL(ref(storage, workout.image))
@@ -28,6 +35,16 @@ export default function Workoutdetails(props) {
             setImageSrc(url);
         })
     }, [workout.image])
+
+    // Get all userRecords for workout
+    useEffect(function () {
+        if (!auth.currentUser) return;
+        var clause = where("userId", "==", auth.currentUser.uid);
+        var clause2 = where("workoutId", "==", id);
+        getEverything("userRecords", clause, clause2)
+        .then(docs => setUserRecords(docs));
+    }, [auth.currentUser])
+
 
     return (
         <>
@@ -56,6 +73,35 @@ export default function Workoutdetails(props) {
                     animate={{ height: "40vh" }}
                     transition={{duration: 0.3, easings: "anticipate",}}
                     />}
+                    <div className="content">
+                        <motion.p
+                            className='content__description'
+                            initial={{y: -20, opacity: 0}}
+                            animate={{y: 0, opacity: 1}}
+                            transition={{delay: 0.3, duration: 0.3}}
+                        >{ workout.description }</motion.p>
+
+                        <Contentgroup delay={0.4}>
+                            <h1 className="contentGroup__title">Muskler</h1>
+                            <div className="itemWrapper">
+                                {workout.muscels?.map(muscle => {
+                                    return <p>{muscle.name}</p>
+                                })}
+                            </div>
+                        </Contentgroup>
+
+                        {userRecords.length > 0 && <Contentgroup delay={0.5}>
+                            <h1 className='contentGroup__title'>Dine rekorder</h1>
+                            <div className="itemWrappper">
+                                {userRecords.map(doc => {
+                                    var docData = doc.data();
+                                    console.log(docData)
+                                    return <p>You did {docData.repetitions} repetitions with {docData.weight} kg.</p>
+                                })}
+                            </div>
+                        </Contentgroup>}
+                        
+                    </div>
 
                 </main>
             </motion.div>
