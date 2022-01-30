@@ -88,8 +88,8 @@ export default function Workoutdetails(props) {
                         <Contentgroup delay={0.4}>
                             <h1 className="contentGroup__title">Muskler</h1>
                             <div className="itemWrapper">
-                                {workout.muscels?.map(muscle => {
-                                    return <p>{muscle.name}</p>
+                                {workout.muscels?.map((muscle, index) => {
+                                    return <p key={index}>{muscle.name}</p>
                                 })}
                             </div>
                         </Contentgroup>
@@ -101,6 +101,7 @@ export default function Workoutdetails(props) {
                                     var docData = doc.data();
                                     return <Userrecordcard 
                                         delay={index + 1} 
+                                        key={index}
                                         parentDelay={0.6} 
                                         onClick={() => setRecordModal({
                                             title: "Record details",
@@ -119,11 +120,10 @@ export default function Workoutdetails(props) {
                         </Contentgroup>}
                         
                         <AnimatePresence>
-                        {recordModal && <Modal setRecordModal={setRecordModal}>
-                            <h1>{recordModal.title}</h1>
-                            <p>repetitions: {recordModal.recordDetails?.repetitions}, weight: {recordModal.recordDetails?.weight}</p>
-                        
-                        </Modal>}
+                            {recordModal && <Modal 
+                                setRecordModal={setRecordModal}
+                                recordData={recordModal}
+                            />}
                         </AnimatePresence>
                         
                     </div>

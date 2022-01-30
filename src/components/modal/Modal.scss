@@ -15,16 +15,40 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 25px 20px 0 20px;
         width: 100%;
         position: relative;
 
         &--view {
             position: absolute;
+            top: 20px;
+            left: 20px;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
         }
         &--edit {
             position: absolute;
         }
+
+
+        .modalHeading {
+            color: rgb(190, 190, 190);
+            font-family: sans-serif;
+        }
+        .modalStats {
+            display: flex;
+            gap: 25px;
+            color: rgb(190, 190, 190);
+            margin-top: 10px;
+            font-size: 40px;
+            font-family: sans-serif;
+            font-weight: bold;
+            align-items: center;
+        }
+
 
         .modeButtonsWrapper {
             display: flex;
@@ -32,13 +56,22 @@
             align-items: center;
             gap: 10px;
             width: 100%;
-            margin-top: auto;
+
             margin-bottom: 30px;
             .modeButtons {
-                width: 80%;
+                width: 100%;
                 padding: 15px 0;
                 border-radius: 10px;
-    
+                font-family: sans-serif;
+                font-weight: bold;
+                text-transform: uppercase;
+
+                &.edit {
+                    background-color: rgb(139, 119, 0);
+                }
+                &.delete {
+                    background-color: rgb(136, 42, 42);
+                }
             }
         }
     }

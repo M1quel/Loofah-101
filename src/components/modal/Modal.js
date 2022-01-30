@@ -28,50 +28,57 @@ export default function Modal(props) {
                 exit={{y: "100%"}}
                 transition={{duration: 0.15, ease: 'easeOut'}}
                 className='overlay__content'>
+
+                    {/* User clicked a record and is viewing it */}
                     <AnimatePresence initial={false}>
-                        <AnimatePresence>
-                            {mode == "view" && <motion.div 
-                                className='overlay__content--view'
-                                initial={{x: "-200%"}}
-                                animate={{x: 0}}
-                                exit={{x: "-200%"}}
-                                transition={{duration: 0.2}}
-                            >
-                                {props.children}
+                        {mode == "view" && <motion.div 
+                            className='overlay__content--view'
+                            initial={{x: "-200%"}}
+                            animate={{x: 0}}
+                            exit={{x: "-200%"}}
+                            transition={{duration: 0.2}}
+                        >
 
-                                <div className='modeButtonsWrapper'>
-                                    <button className='modeButtons' onClick={() => setMode("edit")}>
-                                        Edit
-                                    </button>
-                                    <button className='modeButtons'>
-                                        Delete
-                                    </button>
-                                </div>
+                            <h1 className='modalHeading'>{props.recordData.title}</h1>
+                            <div className='modalStats'>
+                                <p><i className="fas fa-sync"></i> {props.recordData.recordDetails?.repetitions}</p>
+                                <p><i className="fas fa-dumbbell"></i> {props.recordData.recordDetails?.weight}</p>
+                            </div>
 
-                            </motion.div>}
-                        </AnimatePresence>
-                        <AnimatePresence>
-                            {mode == "edit" && <motion.div
-                                className='overlay__content--edit'
-                                initial={{x: "200%"}}
-                                animate={{x: 0}}
-                                exit={{x: "200%"}}
-                                transition={{duration: 0.2}}
-                            >
-                                {props.children}
-                                <div className='modeButtonsWrapper'>
-                                    <button className='modeButtons' onClick={() => setMode("view")}>
-                                        asdasd
-                                    </button>
-                                    <button className='modeButtons'>
-                                        Delete
-                                    </button>
-                                </div>
-                                
-                            </motion.div>}
-                        </AnimatePresence>
+                            <div className='modeButtonsWrapper'>
+                                <button className='modeButtons edit' onClick={() => setMode("edit")}>
+                                    Edit
+                                </button>
+                                <button className='modeButtons delete'>
+                                    Delete
+                                </button>
+                            </div>
 
+                        </motion.div>}
                     </AnimatePresence>
+
+                    {/* User clicked to edit the record */}
+                    <AnimatePresence>
+                        {mode == "edit" && <motion.div
+                            className='overlay__content--edit'
+                            initial={{x: "200%"}}
+                            animate={{x: 0}}
+                            exit={{x: "200%"}}
+                            transition={{duration: 0.2}}
+                        >
+                            {props.children}
+                            <div className='modeButtonsWrapper'>
+                                <button className='modeButtons' onClick={() => setMode("view")}>
+                                    asdasd
+                                </button>
+                                <button className='modeButtons'>
+                                    Delete
+                                </button>
+                            </div>
+                            
+                        </motion.div>}
+                    </AnimatePresence>
+
                 </motion.div>
                 
             </motion.div>
