@@ -1,11 +1,19 @@
 import React from 'react';
 import "./Modal.scss";
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react/cjs/react.development';
+import { useEffect, useState } from 'react/cjs/react.development';
 
 export default function Modal(props) {
-    var [mode, setMode] = useState("view");
+    var [mode, setMode] = useState(false);
+    var [rendered, setRendered] = useState(false);
     
+    useEffect(function () {
+        if (props.recordData == "add") {
+            setMode("add");
+        } else {
+            setMode("view");
+        }
+    }, [])
     function handleExit (e) {
         if (e.target.classList.contains("overlay")) {
             props.setRecordModal(false);
@@ -68,16 +76,36 @@ export default function Modal(props) {
                         >
                             {props.children}
                             <div className='modeButtonsWrapper'>
-                                <button className='modeButtons' onClick={() => setMode("view")}>
-                                    asdasd
-                                </button>
                                 <button className='modeButtons'>
-                                    Delete
+                                    Save
+                                </button>
+                                <button className='modeButtons' onClick={() => setMode("view")}>
+                                    Cancel
                                 </button>
                             </div>
                             
                         </motion.div>}
                     </AnimatePresence>
+                    {mode == "add" && <motion.div 
+                            className='overlay__content--view'
+                        >
+
+                            <h1 className='modalHeading'>Add new record</h1>
+                            <div className='modalStats'>
+                                <p><i className="fas fa-sync"></i> {props.recordData.recordDetails?.repetitions}</p>
+                                <p><i className="fas fa-dumbbell"></i> {props.recordData.recordDetails?.weight}</p>
+                            </div>
+
+                            <div className='modeButtonsWrapper'>
+                                <button className='modeButtons edit' onClick={() => setMode("edit")}>
+                                    Add
+                                </button>
+                                <button className='modeButtons delete'>
+                                    Cancel
+                                </button>
+                            </div>
+
+                        </motion.div>}
 
                 </motion.div>
                 

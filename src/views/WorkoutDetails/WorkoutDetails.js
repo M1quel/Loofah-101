@@ -117,6 +117,9 @@ export default function Workoutdetails(props) {
                                     />
                                 })}
                             </div>
+                            <button className='contentGroup__addRecord' onClick={() => setRecordModal("add")}>
+                                Add new record
+                            </button>
                         </Contentgroup>}
                         
                         <AnimatePresence>

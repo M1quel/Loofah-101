@@ -45,6 +45,17 @@
                 gap: 20px;
                 color: whitesmoke;
             }
+
+            &__addRecord {
+                width: 100%;
+                padding: 15px 0;
+                border-radius: 10px;
+                margin-top: 20px;
+                background-color: rgb(34, 116, 34);
+                text-transform: uppercase;
+                font-family: sans-serif;
+                font-weight: bold;
+            }
         }
     }
 }
