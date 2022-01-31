@@ -18,6 +18,10 @@
         width: 100%;
         position: relative;
 
+        button {
+            color: black;
+        }
+
         &--view {
             position: absolute;
             top: 20px;
