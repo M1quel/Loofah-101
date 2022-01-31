@@ -8,7 +8,7 @@ import { Switch, Route } from 'react-router';
 import { useHistory, useLocation } from 'react-router-dom';
 
 function App() {
-  var auth = getAuth();
+  const auth = getAuth();
   const history = useHistory();
   const location = useLocation();
   onAuthStateChanged(auth, (user) => {

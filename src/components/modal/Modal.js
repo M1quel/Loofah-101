@@ -1,11 +1,11 @@
 import React from 'react';
 import "./Modal.scss";
 import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useState } from 'react/cjs/react.development';
+import { useEffect, useState } from 'react';
 
 export default function Modal(props) {
     var [mode, setMode] = useState(false);
-    var [rendered, setRendered] = useState(false);
+
     
     useEffect(function () {
         if (props.recordData == "add") {
