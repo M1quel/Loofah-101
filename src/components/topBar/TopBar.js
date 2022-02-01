@@ -8,7 +8,7 @@ export default function Topbar(props) {
     return (
         <>
         <nav className='topBar'>
-            <Link className='topBar__back' to={props.back}><i className="fas fa-chevron-left"></i></Link>
+            <Link className='topBar__back' to={props.back}><i className="fas fa-chevron-left"></i> Tilbage</Link>
             <motion.h1
             initial={props.textInitialAnimation}
             animate={props.textAnimate}

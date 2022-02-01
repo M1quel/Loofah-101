@@ -2,13 +2,15 @@ import React from 'react';
 import "./Modal.scss";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { db } from "../../base";
+import { addDoc, collection } from "firebase/firestore";
 
 export default function Modal(props) {
     var [mode, setMode] = useState(false);
 
     
     useEffect(function () {
-        if (props.recordData == "add") {
+        if (props.recordData?.mode == "add") {
             setMode("add");
         } else {
             setMode("view");
@@ -17,6 +19,20 @@ export default function Modal(props) {
     function handleExit (e) {
         if (e.target.classList.contains("overlay")) {
             props.setRecordModal(false);
+        }
+    }
+
+    async function handleAddRecord () {
+        let addData = {
+            repetitions: parseInt(window.addRepetitionsInput?.value),
+            weight: parseInt(window.addWeightInput?.value),
+            userId: props.recordData?.userId,
+            workoutId: props.recordData?.workoutId
+        }
+        const docRef = await addDoc(collection(db, "userRecords"), addData);
+        if (docRef) {
+            props.setRecordModal(false);
+            props.update();
         }
     }
 
@@ -92,12 +108,14 @@ export default function Modal(props) {
 
                             <h1 className='modalHeading'>Add new record</h1>
                             <div className='modalStats'>
-                                <p><i className="fas fa-sync"></i> {props.recordData.recordDetails?.repetitions}</p>
-                                <p><i className="fas fa-dumbbell"></i> {props.recordData.recordDetails?.weight}</p>
+                                <p><i className="fas fa-sync"></i> {props.recordData.recordDetails?.repetitions} <input type="number" name='repetitions' id='addRepetitionsInput' className='recordInput__repetitions'/></p>
+                                <p><i className="fas fa-dumbbell"></i> {props.recordData.recordDetails?.weight} <input type="number" name="weight" id="addWeightInput" className='recordInput__weight' /></p>
                             </div>
 
                             <div className='modeButtonsWrapper'>
-                                <button className='modeButtons edit' onClick={() => setMode("edit")}>
+                                <button className='modeButtons edit' onClick={() => {
+                                    handleAddRecord();
+                                }}>
                                     Add
                                 </button>
                                 <button className='modeButtons delete'>

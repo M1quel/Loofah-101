@@ -42,12 +42,16 @@ export default function Workoutdetails(props) {
 
     // Get all userRecords for workout
     useEffect(function () {
+        updateRecords();
+    }, [auth.currentUser])
+
+    function updateRecords() {
         if (!auth.currentUser) return;
         var clause = where("userId", "==", auth.currentUser.uid);
         var clause2 = where("workoutId", "==", id);
         getEverything("userRecords", clause, clause2)
         .then(docs => setUserRecords(docs));
-    }, [auth.currentUser])
+    }
 
 
     return (
@@ -117,7 +121,11 @@ export default function Workoutdetails(props) {
                                     />
                                 })}
                             </div>
-                            <button className='contentGroup__addRecord' onClick={() => setRecordModal("add")}>
+                            <button className='contentGroup__addRecord' onClick={() => setRecordModal({
+                                            workoutId: id,
+                                            userId: auth?.currentUser?.uid,
+                                            mode: "add"
+                                        })}>
                                 Add new record
                             </button>
                         </Contentgroup>}
@@ -126,6 +134,7 @@ export default function Workoutdetails(props) {
                             {recordModal && <Modal 
                                 setRecordModal={setRecordModal}
                                 recordData={recordModal}
+                                update={updateRecords}
                             />}
                         </AnimatePresence>
                         

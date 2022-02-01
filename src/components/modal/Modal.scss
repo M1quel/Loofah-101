@@ -52,13 +52,32 @@
         }
         .modalStats {
             display: flex;
-            gap: 25px;
             color: rgb(190, 190, 190);
             margin-top: 10px;
             font-size: 40px;
             font-family: sans-serif;
             font-weight: bold;
             align-items: center;
+            justify-content: center;
+            gap: 50px;
+            width: 100%;
+
+            p {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+
+                input {
+                    height: 30px;
+                    width: fit-content;
+                    width: 50px;
+                    background-color: rgb(112, 112, 112);
+                    border-radius: 5px;
+                    font-size: 15px;
+                    text-align: center;
+                }
+            }
         }
 
 

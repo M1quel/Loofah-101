@@ -1,6 +1,6 @@
 .topBar {
     display: grid;
-    grid-template-columns: 40px 1fr 40px;
+    grid-template-columns: 1fr 1fr 1fr;
     justify-items: center;
     background-color: rgb(36, 36, 36);
     height: clamp(50px , 8vh, 100px);
@@ -8,7 +8,8 @@
     color: whitesmoke;
     font-family: sans-serif;
     &__back {
-        color: rgb(226, 226, 226);
+        justify-self: left;
+        color: rgb(204, 204, 204);
         i {
             font-size: 20px;
         }
