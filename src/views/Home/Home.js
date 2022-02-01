@@ -5,12 +5,15 @@ import "./Home.scss";
 import getEverything from '../../helpers/getEverythingFromColection';
 import Workoutcard from '../../components/workoutCard/WorkoutCard';
 import { motion } from 'framer-motion';
+import { collection, query } from 'firebase/firestore';
+import { db } from "../../base";
 
 export default function Home(props) {
     var [workouts, setWorkouts] = useState([]);
 
     useEffect(function () {
-        getEverything("workouts")
+        let q = query(collection(db, "workouts"))
+        getEverything(q)
         .then(data => setWorkouts(data));
     }, [])
     return (

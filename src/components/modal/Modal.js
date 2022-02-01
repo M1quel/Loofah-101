@@ -3,7 +3,8 @@ import "./Modal.scss";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { db } from "../../base";
-import { addDoc, collection } from "firebase/firestore";
+import { doc, updateDoc, addDoc, collection, query, where, setDoc } from "firebase/firestore";
+import getEverything from '../../helpers/getEverythingFromColection';
 
 export default function Modal(props) {
     var [mode, setMode] = useState(false);
@@ -21,7 +22,6 @@ export default function Modal(props) {
             props.setRecordModal(false);
         }
     }
-
     async function handleAddRecord () {
         let addData = {
             repetitions: parseInt(window.addRepetitionsInput?.value),
@@ -29,11 +29,33 @@ export default function Modal(props) {
             userId: props.recordData?.userId,
             workoutId: props.recordData?.workoutId
         }
-        const docRef = await addDoc(collection(db, "userRecords"), addData);
-        if (docRef) {
-            props.setRecordModal(false);
-            props.update();
+        let q = query(collection(db, "userRecords"), where("workoutId", "==", props.recordData?.workoutId), where("userId", "==", props.recordData?.userId), where("repetitions", "==", addData.repetitions));
+        var docCheck = await getEverything(q)
+        .then(docData => {
+            console.log(docData);
+            if (docData.length > 0) {
+               return docData[0].data();
+            }
+            return false;
+        });
+        if (docCheck) {
+            console.log(docCheck.workoutId);
+            let recordRef = doc(db, "userRecords", docCheck.workoutId);
+            console.log(recordRef);
+            await setDoc(recordRef, addData)
+            .then(() => {
+                props.update();
+                props.setRecordModal(false);
+
+            });
+        } else {
+            const docRef = await addDoc(collection(db, "userRecords"), addData);
+            if (docRef) {
+                props.setRecordModal(false);
+                props.update();
+            }
         }
+
     }
 
     return (

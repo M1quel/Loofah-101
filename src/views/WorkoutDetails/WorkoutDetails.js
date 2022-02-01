@@ -5,12 +5,13 @@ import getDocFromCollection from '../../helpers/getDocFromCollection';
 import { AnimatePresence, motion } from 'framer-motion';
 import "./WorkoutDetails.scss";
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
-import { where } from 'firebase/firestore';
+import { where, query, collection } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import getEverything from "../../helpers/getEverythingFromColection";
 import Contentgroup from '../../components/contentGroup/ContentGroup';
 import Userrecordcard from '../../components/userRecordCard/UserRecordCard';
 import Modal from "../../components/modal/Modal";
+import { db } from "../../base";
 
 export default function Workoutdetails(props) {
     var auth = getAuth();
@@ -47,9 +48,8 @@ export default function Workoutdetails(props) {
 
     function updateRecords() {
         if (!auth.currentUser) return;
-        var clause = where("userId", "==", auth.currentUser.uid);
-        var clause2 = where("workoutId", "==", id);
-        getEverything("userRecords", clause, clause2)
+        let q = query(collection(db, "userRecords"), where("workoutId", "==", id), where("userId", "==", auth.currentUser?.uid));
+        getEverything(q)
         .then(docs => setUserRecords(docs));
     }
 
@@ -98,9 +98,9 @@ export default function Workoutdetails(props) {
                             </div>
                         </Contentgroup>
 
-                        {userRecords.length > 0 && <Contentgroup delay={0.5}>
+                        <Contentgroup delay={0.5}>
                             <h1 className='contentGroup__title'>Dine rekorder</h1>
-                            <div className="itemWrapper userRecords">
+                            {userRecords.length > 0 && <div className="itemWrapper userRecords">
                                 {userRecords.map((doc, index) => {
                                     var docData = doc.data();
                                     return <Userrecordcard 
@@ -120,7 +120,7 @@ export default function Workoutdetails(props) {
                                         weight={docData.weight}
                                     />
                                 })}
-                            </div>
+                            </div>}
                             <button className='contentGroup__addRecord' onClick={() => setRecordModal({
                                             workoutId: id,
                                             userId: auth?.currentUser?.uid,
@@ -128,7 +128,7 @@ export default function Workoutdetails(props) {
                                         })}>
                                 Add new record
                             </button>
-                        </Contentgroup>}
+                        </Contentgroup>
                         
                         <AnimatePresence>
                             {recordModal && <Modal 
