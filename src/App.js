@@ -1,5 +1,5 @@
 import './App.scss';
-import Login from './views/Login';
+import Login from './views/Login/Login';
 import { AnimatePresence } from 'framer-motion';
 import Home from './views/Home/Home';
 import { getAuth, onAuthStateChanged } from "firebase/auth";

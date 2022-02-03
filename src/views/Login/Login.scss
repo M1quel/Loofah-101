@@ -1,0 +1,61 @@
+.login {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+
+
+    &Form {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: rgb(36, 36, 36);
+        &__inputGroup {
+            width: 100%;
+            label {
+                display: block;
+                margin-bottom: 5px;
+                color: whitesmoke;
+                font-family: sans-serif;
+            }
+            input {
+                font-family: sans-serif;
+                color: whitesmoke;
+                background-color: rgb(112, 112, 112);
+                padding: 10px 20px;
+                border-radius: 5px;
+                display: block;
+                width: 100%;
+                &:focus {
+                    outline: none;
+                }
+            }
+        }
+        &__rememberGroup {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            label {
+                color: whitesmoke;
+                font-family: sans-serif;
+            }
+            input {
+                height: 20px;
+                width: 20px;
+            }
+        }
+
+        &__submit {
+            padding: 10px 50px;
+            border-radius: 10px;
+            background-color: rgb(34, 116, 34);
+        }
+    }
+}
