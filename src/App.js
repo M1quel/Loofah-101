@@ -6,7 +6,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Workoutdetails from './views/WorkoutDetails/WorkoutDetails';
 import { Switch, Route } from 'react-router';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useEffect, useState } from 'react/cjs/react.development';
+import { useEffect, useState } from 'react';
 
 
 

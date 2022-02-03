@@ -7,9 +7,6 @@ import Workoutcard from '../../components/workoutCard/WorkoutCard';
 import { motion } from 'framer-motion';
 import { collection, query } from 'firebase/firestore';
 import { db } from "../../base";
-import confirmAuth from '../../helpers/confirmAuth';
-import { useHistory } from 'react-router-dom';
-import { getAuth } from 'firebase/auth';
 
 export default function Home(props) {
     var [workouts, setWorkouts] = useState([]);
