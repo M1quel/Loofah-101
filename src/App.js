@@ -14,23 +14,23 @@ function App() {
   const auth = getAuth();
   const location = useLocation();
   const history = useHistory();
-  var [bruger, setBruger] = useState(undefined);
+  var [user, setUser] = useState(undefined);
 
   const authListener = onAuthStateChanged(auth, (authUser) => {
     if (authUser) {
-      setBruger(authUser)
+      setUser(authUser)
     } else {
-      setBruger(false);
+      setUser(false);
     }
   })
   useEffect(function () {
-    if (bruger == undefined) return;
-    if (!bruger) {
+    if (user == undefined) return;
+    if (!user) {
       history.push("/login");
     } else {
       history.push("/");
     }
-  }, [bruger])
+  }, [user])
   return (
     <div className="wrapper">
       <div className="view">
