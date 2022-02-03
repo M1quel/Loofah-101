@@ -59,7 +59,7 @@ export default function Workoutdetails(props) {
             <motion.div 
                 className="workoutDetails"
                 initial={{ x: "100vw" }}
-                animate={{ x: "0" }}
+                animate={{ x: "0px" }}
                 exit={{ x: "100vw" }}
                 transition={{ duration: 0.3, easings: "easeInOut"  }}
                 layout="position"
@@ -98,37 +98,40 @@ export default function Workoutdetails(props) {
                             </div>
                         </Contentgroup>
 
-                        <Contentgroup delay={0.5}>
-                            <h1 className='contentGroup__title'>Dine rekorder</h1>
-                            <button className='contentGroup__addRecord' onClick={() => setRecordModal({
-                                            workoutId: id,
-                                            userId: auth?.currentUser?.uid,
-                                            mode: "add"
-                                        })}>
-                                Add new record
-                            </button>
-                            {userRecords.length > 0 && <div className="itemWrapper userRecords">
-                                {userRecords.map((doc, index) => {
-                                    var docData = doc.data();
-                                    return <Userrecordcard 
-                                        delay={index + 1} 
-                                        key={index}
-                                        parentDelay={0.6} 
-                                        onClick={() => setRecordModal({
-                                            title: "Record details",
-                                            recordId: doc.id,
-                                            recordDetails: {
-                                                repetitions: docData.repetitions,
-                                                weight: docData.weight
-                                            },
-                                            userId: auth?.currentUser?.uid
-                                        })}
-                                        repetitions={docData.repetitions}
-                                        weight={docData.weight}
-                                    />
-                                })}
-                            </div>}
-                        </Contentgroup>
+                        <AnimatePresence>
+                            <Contentgroup delay={0.5}>
+                                <h1 className='contentGroup__title'>Dine rekorder</h1>
+                                <button className='contentGroup__addRecord' onClick={() => setRecordModal({
+                                                workoutId: id,
+                                                userId: auth?.currentUser?.uid,
+                                                mode: "add"
+                                            })}>
+                                    Add new record
+                                </button>
+                                {userRecords.length > 0 && <div className="itemWrapper userRecords">
+                                    {userRecords.map((doc, index) => {
+                                        var docData = doc.data();
+                                        return <Userrecordcard 
+                                            delay={index + 1} 
+                                            key={index}
+                                            parentDelay={0.6} 
+                                            onClick={() => setRecordModal({
+                                                title: "Record details",
+                                                recordId: doc.id,
+                                                recordDetails: {
+                                                    repetitions: docData.repetitions,
+                                                    weight: docData.weight
+                                                },
+                                                userId: auth?.currentUser?.uid
+                                            })}
+                                            repetitions={docData.repetitions}
+                                            weight={docData.weight}
+                                        />
+                                    })}
+                                </div>}
+                            </Contentgroup>
+                        </AnimatePresence>
+                        
                     </div>
 
                 </main>
