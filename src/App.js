@@ -6,17 +6,25 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Workoutdetails from './views/WorkoutDetails/WorkoutDetails';
 import { Switch, Route } from 'react-router';
 import { useHistory, useLocation } from 'react-router-dom';
+import { useEffect } from 'react/cjs/react.development';
 
 function App() {
   const auth = getAuth();
+  console.log(auth);
   const history = useHistory();
   const location = useLocation();
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-    } else {
-      history.push('/login');
-    }
-  });
+  function authObserver () {
+    onAuthStateChanged( auth, (user) => {
+      if (user) {
+        history.push("/");
+      } else {
+        history.push("/login");
+      }
+    })
+  }
+  useEffect(function () {
+    authObserver();
+  }, [])
 
   return (
     <div className="wrapper">

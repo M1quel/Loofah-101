@@ -7,14 +7,18 @@ import Workoutcard from '../../components/workoutCard/WorkoutCard';
 import { motion } from 'framer-motion';
 import { collection, query } from 'firebase/firestore';
 import { db } from "../../base";
+import confirmAuth from '../../helpers/confirmAuth';
 
 export default function Home(props) {
     var [workouts, setWorkouts] = useState([]);
 
     useEffect(function () {
-        let q = query(collection(db, "workouts"))
-        getEverything(q)
-        .then(data => setWorkouts(data));
+        if (confirmAuth()) {
+            let q = query(collection(db, "workouts"))
+            getEverything(q)
+            .then(data => setWorkouts(data));
+        }
+        
     }, [])
     return (
         <>

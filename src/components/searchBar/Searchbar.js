@@ -1,13 +1,16 @@
 import React from 'react';
 import "./SearchBar.scss";
 import { getAuth, signOut } from "firebase/auth";
+import { useHistory } from 'react-router-dom';
 
 
 export default function Searchbar(props) {
     const auth = getAuth();
+    const history = useHistory();
     function signUserOut () {
         signOut(auth).then(() => {
             // Sign-out successful.
+            history.push("/login");
         }).catch((error) => {
             // An error happened.
         });
