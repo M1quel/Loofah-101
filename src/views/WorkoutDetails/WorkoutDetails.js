@@ -20,7 +20,6 @@ export default function Workoutdetails(props) {
     var [workout, setWorkout] = useState({});
     var [userRecords, setUserRecords] = useState([]);
     var [recordModal, setRecordModal] = useState(false);
-    console.log(recordModal);
     const storage = getStorage();
     
     // Get the current workout

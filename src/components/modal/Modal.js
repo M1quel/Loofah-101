@@ -3,10 +3,11 @@ import "./Modal.scss";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { db } from "../../base";
-import { doc, updateDoc, addDoc, collection, query, where, setDoc } from "firebase/firestore";
+import { doc, updateDoc, addDoc, collection, query, where, setDoc, deleteDoc } from "firebase/firestore";
 import getEverything from '../../helpers/getEverythingFromColection';
 
 export default function Modal(props) {
+    console.log(props);
     var [mode, setMode] = useState(false);
 
     
@@ -22,6 +23,30 @@ export default function Modal(props) {
             props.setRecordModal(false);
         }
     }
+
+    async function handleDelete(recordId) {
+        await deleteDoc(doc(db, "userRecords", recordId))
+        .then(function () {
+            props.update();
+            props.setRecordModal(false);
+        })
+    }
+    async function handleEdit (recordId) {
+        console.log(recordId);
+        let recordRef = doc(db, "userRecords", recordId);
+        let newRepetitions = window.editRepetitionsInput.value;
+        let newWeight = window.editWeightInput.value;
+        await updateDoc(recordRef, {
+            repetitions: parseInt(newRepetitions),
+            weight: parseInt(newWeight)
+        })
+        .then((something) => {
+            console.log(something);
+            props.update();
+            props.setRecordModal(false);
+
+        });
+    }
     async function handleAddRecord () {
         let addData = {
             repetitions: parseInt(window.addRepetitionsInput?.value),
@@ -29,19 +54,16 @@ export default function Modal(props) {
             userId: props.recordData?.userId,
             workoutId: props.recordData?.workoutId
         }
-        let q = query(collection(db, "userRecords"), where("workoutId", "==", props.recordData?.workoutId), where("userId", "==", props.recordData?.userId), where("repetitions", "==", addData.repetitions));
+        let q = query(collection(db, "userRecords"), where("workoutId", "==", addData.workoutId), where("userId", "==", addData.userId), where("repetitions", "==", addData.repetitions));
         var docCheck = await getEverything(q)
         .then(docData => {
-            console.log(docData);
             if (docData.length > 0) {
-               return docData[0].data();
+               return docData[0];
             }
             return false;
         });
         if (docCheck) {
-            console.log(docCheck.workoutId);
-            let recordRef = doc(db, "userRecords", docCheck.workoutId);
-            console.log(recordRef);
+            let recordRef = doc(db, "userRecords", docCheck.id);
             await setDoc(recordRef, addData)
             .then(() => {
                 props.update();
@@ -95,7 +117,7 @@ export default function Modal(props) {
                                 <button className='modeButtons edit' onClick={() => setMode("edit")}>
                                     Edit
                                 </button>
-                                <button className='modeButtons delete'>
+                                <button className='modeButtons delete' onClick={() => handleDelete(props.recordData?.recordId)}>
                                     Delete
                                 </button>
                             </div>
@@ -112,9 +134,13 @@ export default function Modal(props) {
                             exit={{x: "200%"}}
                             transition={{duration: 0.2}}
                         >
-                            {props.children}
+                            <h1 className='modalHeading'>Add new record</h1>
+                            <div className='modalStats'>
+                                <p><i className="fas fa-sync"></i> <input defaultValue={props.recordData?.recordDetails?.repetitions} type="number" name='repetitions' id='editRepetitionsInput' className='recordInput__repetitions'/></p>
+                                <p><i className="fas fa-dumbbell"></i> <input defaultValue={props.recordData?.recordDetails?.weight} type="number" name="weight" id="editWeightInput" className='recordInput__weight' /></p>
+                            </div>
                             <div className='modeButtonsWrapper'>
-                                <button className='modeButtons'>
+                                <button className='modeButtons' onClick={() => handleEdit(props.recordData?.recordId)}>
                                     Save
                                 </button>
                                 <button className='modeButtons' onClick={() => setMode("view")}>
