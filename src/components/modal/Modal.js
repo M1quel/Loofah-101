@@ -73,8 +73,8 @@ export default function Modal(props) {
         } else {
             const docRef = await addDoc(collection(db, "userRecords"), addData);
             if (docRef) {
-                props.setRecordModal(false);
                 props.update();
+                props.setRecordModal(false);
             }
         }
 

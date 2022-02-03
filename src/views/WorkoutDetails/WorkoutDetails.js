@@ -46,6 +46,7 @@ export default function Workoutdetails(props) {
     }, [auth.currentUser])
 
     function updateRecords() {
+        setUserRecords([]);
         if (!auth.currentUser) return;
         let q = query(collection(db, "userRecords"), where("workoutId", "==", id), where("userId", "==", auth.currentUser?.uid));
         getEverything(q)
@@ -58,7 +59,7 @@ export default function Workoutdetails(props) {
             <motion.div 
                 className="workoutDetails"
                 initial={{ x: "100vw" }}
-                animate={{ x: "0px" }}
+                animate={{ x: "0" }}
                 exit={{ x: "100vw" }}
                 transition={{ duration: 0.3, easings: "easeInOut"  }}
                 layout="position"
@@ -99,6 +100,13 @@ export default function Workoutdetails(props) {
 
                         <Contentgroup delay={0.5}>
                             <h1 className='contentGroup__title'>Dine rekorder</h1>
+                            <button className='contentGroup__addRecord' onClick={() => setRecordModal({
+                                            workoutId: id,
+                                            userId: auth?.currentUser?.uid,
+                                            mode: "add"
+                                        })}>
+                                Add new record
+                            </button>
                             {userRecords.length > 0 && <div className="itemWrapper userRecords">
                                 {userRecords.map((doc, index) => {
                                     var docData = doc.data();
@@ -120,27 +128,18 @@ export default function Workoutdetails(props) {
                                     />
                                 })}
                             </div>}
-                            <button className='contentGroup__addRecord' onClick={() => setRecordModal({
-                                            workoutId: id,
-                                            userId: auth?.currentUser?.uid,
-                                            mode: "add"
-                                        })}>
-                                Add new record
-                            </button>
                         </Contentgroup>
-                        
-                        <AnimatePresence>
-                            {recordModal && <Modal 
-                                setRecordModal={setRecordModal}
-                                recordData={recordModal}
-                                update={updateRecords}
-                            />}
-                        </AnimatePresence>
-                        
                     </div>
 
                 </main>
             </motion.div>
+            <AnimatePresence>
+                {recordModal && <Modal 
+                    setRecordModal={setRecordModal}
+                    recordData={recordModal}
+                    update={updateRecords}
+                />}
+            </AnimatePresence>
         </>
     )
 }
