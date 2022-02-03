@@ -14,16 +14,17 @@ function App() {
   const auth = getAuth();
   const location = useLocation();
   const history = useHistory();
-  var [bruger, setBruger] = useState();
+  var [bruger, setBruger] = useState(undefined);
 
   const authListener = onAuthStateChanged(auth, (authUser) => {
     if (authUser) {
       setBruger(authUser)
     } else {
-      return setBruger(false);
+      setBruger(false);
     }
   })
   useEffect(function () {
+    if (bruger == undefined) return;
     if (!bruger) {
       history.push("/login");
     } else {
