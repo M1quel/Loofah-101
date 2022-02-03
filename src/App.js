@@ -10,7 +10,6 @@ import { useEffect } from 'react/cjs/react.development';
 
 function App() {
   const auth = getAuth();
-  console.log(auth);
   const history = useHistory();
   const location = useLocation();
   function authObserver () {

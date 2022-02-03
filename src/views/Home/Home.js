@@ -18,7 +18,6 @@ export default function Home(props) {
             getEverything(q)
             .then(data => setWorkouts(data));
         }
-        
     }, [])
     return (
         <>
