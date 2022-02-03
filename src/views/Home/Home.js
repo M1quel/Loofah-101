@@ -8,16 +8,16 @@ import { motion } from 'framer-motion';
 import { collection, query } from 'firebase/firestore';
 import { db } from "../../base";
 import confirmAuth from '../../helpers/confirmAuth';
+import { useHistory } from 'react-router-dom';
+import { getAuth } from 'firebase/auth';
 
 export default function Home(props) {
     var [workouts, setWorkouts] = useState([]);
 
     useEffect(function () {
-        if (confirmAuth()) {
-            let q = query(collection(db, "workouts"))
-            getEverything(q)
-            .then(data => setWorkouts(data));
-        }
+        let q = query(collection(db, "workouts"))
+        getEverything(q)
+        .then(data => setWorkouts(data));
     }, [])
     return (
         <>
