@@ -5,13 +5,67 @@ import getDocFromCollection from '../../helpers/getDocFromCollection';
 import { AnimatePresence, motion } from 'framer-motion';
 import "./WorkoutDetails.scss";
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
-import { where, query, collection } from 'firebase/firestore';
+import { where, query, collection, Timestamp } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import getEverything from "../../helpers/getEverythingFromColection";
 import Contentgroup from '../../components/contentGroup/ContentGroup';
 import Userrecordcard from '../../components/userRecordCard/UserRecordCard';
 import Modal from "../../components/modal/Modal";
 import { db } from "../../base";
+import {
+    Chart,
+    ArcElement,
+    LineElement,
+    BarElement,
+    PointElement,
+    BarController,
+    BubbleController,
+    DoughnutController,
+    LineController,
+    PieController,
+    PolarAreaController,
+    RadarController,
+    ScatterController,
+    CategoryScale,
+    LinearScale,
+    LogarithmicScale,
+    RadialLinearScale,
+    TimeScale,
+    TimeSeriesScale,
+    Decimation,
+    Filler,
+    Legend,
+    Title,
+    Tooltip,
+    SubTitle
+  } from 'chart.js';
+  
+  Chart.register(
+    ArcElement,
+    LineElement,
+    BarElement,
+    PointElement,
+    BarController,
+    BubbleController,
+    DoughnutController,
+    LineController,
+    PieController,
+    PolarAreaController,
+    RadarController,
+    ScatterController,
+    CategoryScale,
+    LinearScale,
+    LogarithmicScale,
+    RadialLinearScale,
+    TimeScale,
+    TimeSeriesScale,
+    Decimation,
+    Filler,
+    Legend,
+    Title,
+    Tooltip,
+    SubTitle
+  );
 
 export default function Workoutdetails(props) {
     var auth = getAuth();
@@ -20,16 +74,108 @@ export default function Workoutdetails(props) {
     var [workout, setWorkout] = useState({});
     var [userRecords, setUserRecords] = useState([]);
     var [recordModal, setRecordModal] = useState(false);
+    var chartDataTemplate = [
+        {
+            name: "Sunday",
+            workouts: []
+        },
+        {
+            name: "monday",
+            workouts: []
+        },
+        {
+            name: "Tuesday",
+            workouts: []
+        },
+        {
+            name: "Wednesday",
+            workouts: []
+        },
+        {
+            name: "Thursday",
+            workouts: []
+        },
+        {
+            name: "Friday",
+            workouts: []
+        },
+        {
+            name: "Saturday",
+            workouts: []
+        }
+    ]
+    var [dataPoints, setDataPoints] = useState([])
     const storage = getStorage();
-    
+    var chartStartDate = 14;
     // Get the current workout
     useEffect(function () {
         getDocFromCollection("workouts", id)
         .then(doc => {
             setWorkout(doc);
         })
-        
-    }, [id])
+    }, [id]);
+
+    useEffect(function () {
+        let workoutGraphQuery = query(collection(db, "workoutLog"), where("workoutId", "==", id), where("timeStamp", ">=", Timestamp.fromDate(new Date("February 14, 2022"))))
+        getEverything(workoutGraphQuery)
+        .then(docs => {
+            let tempDayArray = chartDataTemplate;
+            docs.forEach(workoutLog => {
+                let logData = workoutLog.data();
+                let dateOfLog = new Date(logData.timeStamp.toDate());
+                let weekday = dateOfLog.getDay();
+                tempDayArray[weekday]?.workouts.push(logData);
+            })
+            tempDayArray.map(day => {
+                var res;
+                if (day.workouts?.length > 0) {
+                    res = Math.max.apply(Math,day.workouts?.map(function(o){return o.weight;}))
+                }
+                day.dataPoint = res ? res : null;
+            })
+            setChart(tempDayArray);
+        });
+    }, [])
+
+
+    function setChart(chartDataPoints){
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const mixedChart = new Chart(ctx, {
+            type: "scatter",
+            data: {
+                labels: [
+                  chartDataPoints[1].name,
+                  chartDataPoints[2].name,
+                  chartDataPoints[3].name,
+                  chartDataPoints[4].name,
+                  chartDataPoints[5].name,
+                  chartDataPoints[6].name,
+                  chartDataPoints[0].name
+                ],
+                datasets: [{
+                  type: 'bar',
+                  label: 'Repetitioner',
+                  data: [5, 5, 10, 3, null, 5],
+                  borderColor: 'rgb(255, 99, 132)',
+                  backgroundColor: 'rgba(255, 99, 132, 0.2)'
+                }, {
+                  type: 'line',
+                  label: 'Vægt',
+                  data: [
+                      chartDataPoints[1]?.dataPoint,
+                      chartDataPoints[2]?.dataPoint,
+                      chartDataPoints[3]?.dataPoint,
+                      chartDataPoints[4]?.dataPoint,
+                      chartDataPoints[5]?.dataPoint,
+                      chartDataPoints[6]?.dataPoint,
+                      chartDataPoints[0]?.dataPoint,
+                  ],
+                  fill: true,
+                  borderColor: 'rgb(54, 162, 235)'
+                }]
+            }
+        });
+    }
 
     // get the image of the current workout
     useEffect(function () {
@@ -100,35 +246,8 @@ export default function Workoutdetails(props) {
 
                         <AnimatePresence>
                             <Contentgroup delay={0.5}>
-                                <h1 className='contentGroup__title'>Dine rekorder</h1>
-                                <button className='contentGroup__addRecord' onClick={() => setRecordModal({
-                                                workoutId: id,
-                                                userId: auth?.currentUser?.uid,
-                                                mode: "add"
-                                            })}>
-                                    Add new record
-                                </button>
-                                {userRecords.length > 0 && <div className="itemWrapper userRecords">
-                                    {userRecords.map((doc, index) => {
-                                        var docData = doc.data();
-                                        return <Userrecordcard 
-                                            delay={index + 1} 
-                                            key={index}
-                                            parentDelay={0.6} 
-                                            onClick={() => setRecordModal({
-                                                title: "Record details",
-                                                recordId: doc.id,
-                                                recordDetails: {
-                                                    repetitions: docData.repetitions,
-                                                    weight: docData.weight
-                                                },
-                                                userId: auth?.currentUser?.uid
-                                            })}
-                                            repetitions={docData.repetitions}
-                                            weight={docData.weight}
-                                        />
-                                    })}
-                                </div>}
+                                <h1 className='contentGroup__title'>Fitness log</h1>
+                                <canvas style={{width: "100%", height: "200px"}} id="myChart"></canvas>
                             </Contentgroup>
                         </AnimatePresence>
                         

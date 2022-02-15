@@ -4,12 +4,13 @@ import Searchbar from '../../components/searchBar/Searchbar';
 import "./Home.scss";
 import getEverything from '../../helpers/getEverythingFromColection';
 import Workoutcard from '../../components/workoutCard/WorkoutCard';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { collection, query } from 'firebase/firestore';
 import { db } from "../../base";
 
 export default function Home(props) {
     var [workouts, setWorkouts] = useState([]);
+    var [addLogOpen, setAddLogOpen] = useState(false);
 
     useEffect(function () {
         let q = query(collection(db, "workouts"))

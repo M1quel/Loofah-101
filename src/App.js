@@ -7,6 +7,7 @@ import Workoutdetails from './views/WorkoutDetails/WorkoutDetails';
 import { Switch, Route } from 'react-router';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Addlog from './components/addLog/AddLog';
 
 
 
@@ -33,6 +34,7 @@ function App() {
   }, [user])
   return (
     <div className="wrapper">
+      <Addlog/>
       <div className="view">
         <AnimatePresence initial={false}>
           <Switch location={location} key={location.pathname}>
