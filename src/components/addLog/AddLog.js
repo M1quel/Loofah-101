@@ -1,7 +1,7 @@
 import { getAuth } from 'firebase/auth';
 import { addDoc, collection, doc, getDocs, serverTimestamp } from 'firebase/firestore';
 import React from 'react';
-import { useEffect, useState } from 'react/cjs/react.development';
+import { useEffect, useState } from 'react';
 import { db } from '../../base';
 import Workoutdetails from '../../views/WorkoutDetails/WorkoutDetails';
 import "./AddLog.scss";
