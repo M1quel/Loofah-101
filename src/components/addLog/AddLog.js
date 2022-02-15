@@ -78,6 +78,7 @@ export default function Addlog(props) {
                                 return <option value={`${element.id}`}>{element.name}</option>
                             })}
                         </select>
+                        
                         <div className="inputLine">
                             <input type="number" placeholder='Vægt' name='addWeight' id='addWeight'/>
                             <input type="number" placeholder='repetitions' name='addRepetitions' id='addRepetitions' />
