@@ -29,16 +29,19 @@ export default function Home(props) {
             >
                 <Searchbar/>
                 <section className='homeContent'>
-                    {workouts.map(item => {
-                        var docData = item.data();
-                        return <Workoutcard
-                        data_id={item.id}
-                        title={docData.name}
-                        description={docData.desctiption}
-                        key={docData.name}
-                        imgSrc={docData.image}
-                        />
-                    })}
+                    <AnimatePresence>
+                        {workouts.map((item, index) => {
+                            var docData = item.data();
+                            return <Workoutcard
+                            cardIndex={index}
+                            data_id={item.id}
+                            title={docData.name}
+                            description={docData.desctiption}
+                            key={docData.name}
+                            imgSrc={docData.image}
+                            />
+                        })}
+                    </AnimatePresence>
                 </section>
             </motion.div>
 

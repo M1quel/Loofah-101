@@ -1,6 +1,7 @@
 .workoutCard {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 35vw auto;
     align-items: center;
     flex-grow: 0;
     border-radius: 10px;
@@ -8,13 +9,18 @@
     padding: 10px;
     background-color: rgb(46, 46, 46);
     width: 100%;
+    text-align: center;
 
     &__image {
         width: 100%;
-        margin-bottom: 10px;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 4px;
     }
     &__title {
+        align-self: center;
         color: whitesmoke;
         font-family: sans-serif;
+        padding-top: 5px;
     }
 }

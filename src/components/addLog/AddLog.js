@@ -72,10 +72,10 @@ export default function Addlog(props) {
                 </button>
                 {toggleOpen && <div className="addLogContent" onClick={(e) => {handleExit(e)}}>
                     <form onSubmit={(e) => handleSubmit(e)}>
-                        <select name="workoutSelect" id="workoutSelect" defaultValue={null}>
+                        <select className='addLogContent__select' name="workoutSelect" id="workoutSelect" defaultValue={null}>
                             <option value={null}>Vælg venligst</option>
                             {workouts.map(element => {
-                                return <option value={`${element.id}`}>{element.name}</option>
+                                return <option key={`${element.id}`} value={`${element.id}`}>{element.name}</option>
                             })}
                         </select>
                         
