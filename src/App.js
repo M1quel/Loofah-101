@@ -28,8 +28,6 @@ function App() {
     if (user == undefined) return;
     if (!user) {
       history.push("/login");
-    } else {
-      history.push("/");
     }
   }, [user])
   return (

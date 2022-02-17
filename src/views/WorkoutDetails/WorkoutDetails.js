@@ -5,7 +5,7 @@ import getDocFromCollection from '../../helpers/getDocFromCollection';
 import { AnimatePresence, motion } from 'framer-motion';
 import "./WorkoutDetails.scss";
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
-import { where, query, collection, Timestamp } from 'firebase/firestore';
+import { where, query, collection, Timestamp, orderBy } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import getEverything from "../../helpers/getEverythingFromColection";
 import Contentgroup from '../../components/contentGroup/ContentGroup';
@@ -74,6 +74,10 @@ export default function Workoutdetails(props) {
     var [workout, setWorkout] = useState({});
     var [userRecords, setUserRecords] = useState([]);
     var [recordModal, setRecordModal] = useState(false);
+    var alltimeChartData = {
+        chartLabels: [],
+        chartPoints: []
+    }
     var chartDataTemplate = [
         {
             name: "Sunday",
@@ -116,50 +120,113 @@ export default function Workoutdetails(props) {
     }, [id]);
 
     useEffect(function () {
-        let workoutGraphQuery = query(collection(db, "workoutLog"), where("workoutId", "==", id), where("timeStamp", ">=", Timestamp.fromDate(new Date("February 14, 2022"))))
-        getEverything(workoutGraphQuery)
-        .then(docs => {
-            let tempDayArray = chartDataTemplate;
-            docs.forEach(workoutLog => {
-                let logData = workoutLog.data();
-                let dateOfLog = new Date(logData.timeStamp.toDate());
-                let weekday = dateOfLog.getDay();
-                tempDayArray[weekday]?.workouts.push(logData);
-            })
-            tempDayArray.map(day => {
-                var res;
-                if (day.workouts?.length > 0) {
-                    res = Math.max.apply(Math,day.workouts?.map(function(o){return o.weight;}))
+        if (auth.currentUser?.uid) {
+            let workoutGraphQuery = query(collection(db, "workoutLog"), where("workoutId", "==", id), where("userId", "==", auth.currentUser?.uid))
+            getEverything(workoutGraphQuery)
+            .then(docs => {
+                let tempDayArray = chartDataTemplate;
+                let tempDayObject = {};
+                let tempDataPointsArray = [];
+                docs.forEach(workoutLog => {
+                    let logData = workoutLog.data();
+                    let dateOfLog = new Date(logData.timeStamp.toDate());
+                    let date = parseInt(`${dateOfLog.getDate()}${dateOfLog.getMonth() + 1 < 10 ? "0" + (dateOfLog.getMonth() + 1) : dateOfLog.getMonth() + 1}${dateOfLog.getFullYear()}`);
+                    if (!tempDayObject[date]) {
+                        tempDayObject[date] = [];    
+                    }
+                    tempDayObject[date]?.push(logData);
+                })
+                
+                for (const key in tempDayObject) {
+                    let value = tempDayObject[key];
+                    if (value.length > 1) {
+                        var res;
+                        res = Math.max.apply(Math,value?.map(function(o){return o.weight;}))
+                        if ( res ) {
+                            tempDataPointsArray.push(res);
+                        }
+                    } else {
+                        tempDataPointsArray.push(value[0] ? parseInt(value[0].weight) : null);
+                    }
                 }
-                day.dataPoint = res ? res : null;
-            })
-            setChart(tempDayArray);
-        });
-    }, [])
+                setAlltimeChart(tempDataPointsArray);
 
+            });
+        }
+    }, [auth.currentUser])
 
-    function setChart(chartDataPoints){
-        const ctx = document.getElementById('myChart').getContext('2d');
+    useEffect(function () {
+        if (auth.currentUser?.uid) {
+            let todaysDate = new Date();
+            // todaysDate.setDate(12);
+
+            let firstDate = todaysDate.getDate() - (todaysDate.getDay() - 1);
+            let lastDate = todaysDate.getDay() == 0 ? todaysDate.getDate() : (7 - (todaysDate.getDay())) + todaysDate.getDate();
+            let lastDato = new Date();
+            lastDato.setDate(lastDate);
+
+            todaysDate.setDate(firstDate);
+            todaysDate.setHours(0);
+            todaysDate.setMinutes(0);
+            todaysDate.setSeconds(0);
+            todaysDate.setMilliseconds(0);
+            let workoutGraphQuery = query(collection(db, "workoutLog"), where("workoutId", "==", id), where("userId", "==", auth.currentUser?.uid), where("timeStamp", ">=", Timestamp.fromDate(todaysDate)), where("timeStamp", "<=", Timestamp.fromDate(lastDato)))
+            getEverything(workoutGraphQuery)
+            .then(docs => {
+                let tempDayArray = chartDataTemplate;
+                docs.forEach(workoutLog => {
+                    let logData = workoutLog.data();
+                    let dateOfLog = new Date(logData.timeStamp.toDate());
+                    let weekday = dateOfLog.getDay();
+                    tempDayArray[weekday]?.workouts.push(logData);
+                })
+                tempDayArray.map(day => {
+                    var res;
+                    if (day.workouts?.length > 0) {
+                        res = Math.max.apply(Math,day.workouts?.map(function(o){return o.weight;}))
+                    }
+                    day.dataPoint = res ? res : null;
+                })
+                setWeeklyChart(tempDayArray);
+            });
+        }
+    }, [auth.currentUser]) 
+
+    function setAlltimeChart (dataPoints) {
+        let labelsTemplate = [];
+        for (let i = 0; i < dataPoints.length; i++) {
+            labelsTemplate.push("");
+        }
+        const ctx = document.getElementById('myAlltimeChart').getContext('2d');
         const mixedChart = new Chart(ctx, {
-            type: "scatter",
+            type: "line",
+            data: {
+                labels: labelsTemplate,
+                datasets: [{
+                  label: 'Vægt',
+                  data: dataPoints,
+                  fill: true,
+                  borderColor: 'rgb(54, 162, 235)',
+                  tension: 0.3
+                }]
+            }
+        });
+    }
+    function setWeeklyChart(chartDataPoints){
+        const ctx = document.getElementById('myWeeklyChart').getContext('2d');
+        const mixedChart = new Chart(ctx, {
+            type: "line",
             data: {
                 labels: [
-                  chartDataPoints[1].name,
-                  chartDataPoints[2].name,
-                  chartDataPoints[3].name,
-                  chartDataPoints[4].name,
-                  chartDataPoints[5].name,
-                  chartDataPoints[6].name,
-                  chartDataPoints[0].name
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday",
+                  "Saturday",
+                  "Sunday"
                 ],
                 datasets: [{
-                  type: 'bar',
-                  label: 'Repetitioner',
-                  data: [5, 5, 10, 3, null, 5],
-                  borderColor: 'rgb(255, 99, 132)',
-                  backgroundColor: 'rgba(255, 99, 132, 0.2)'
-                }, {
-                  type: 'line',
                   label: 'Vægt',
                   data: [
                       chartDataPoints[1]?.dataPoint,
@@ -171,7 +238,8 @@ export default function Workoutdetails(props) {
                       chartDataPoints[0]?.dataPoint,
                   ],
                   fill: true,
-                  borderColor: 'rgb(54, 162, 235)'
+                  borderColor: 'rgb(54, 162, 235)',
+                  tension: 0.3
                 }]
             }
         });
@@ -246,8 +314,14 @@ export default function Workoutdetails(props) {
 
                         <AnimatePresence>
                             <Contentgroup delay={0.5}>
-                                <h1 className='contentGroup__title'>Fitness log</h1>
-                                <canvas style={{width: "100%", height: "200px"}} id="myChart"></canvas>
+                                <h1 className='contentGroup__title'>Weekly Log</h1>
+                                <canvas style={{width: "100%", height: "200px"}} id="myWeeklyChart"></canvas>
+                            </Contentgroup>
+                        </AnimatePresence>
+                        <AnimatePresence>
+                            <Contentgroup delay={0.5}>
+                                <h1 className='contentGroup__title'>Alltime Log</h1>
+                                <canvas style={{width: "100%", height: "200px"}} id="myAlltimeChart"></canvas>
                             </Contentgroup>
                         </AnimatePresence>
                         
